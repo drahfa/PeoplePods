@@ -279,14 +279,21 @@
 	
 		}
 	
-		function output($template = 'comment',$backup_path=null) {
+		function output($template = 'comment',$variables = null,$sub_folder = 'content',$backup_path=null) {
 		
 			if ($this->hasMethod(__FUNCTION__)) { 
-				return $this->override(__FUNCTION__,array($template,$backup_path));
+				return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 			}
 
-			parent::output($template,array('comment'=>$this),'content',$backup_path);
-	
+			if ($variables === null) {
+				$variables = array('comment'=>$this);
+			}
+			if ($sub_folder === null) {
+				$sub_folder = 'content';
+			}
+
+			return parent::output($template,$variables,$sub_folder,$backup_path);
+
 		}
 	
 		

@@ -105,7 +105,9 @@
 
 			$this->set('original_name',basename($this->get('original_name')));
 			
-			$this->set('extension',strtolower(array_pop(explode('.',$this->get('original_name')))));
+			$originalParts = explode('.', $this->get('original_name'));
+			$extension = strtolower(array_pop($originalParts));
+			$this->set('extension',$extension);
 
 			if ($this->get('extension')=="jpeg") {
 				$this->set('extension','jpg');
@@ -151,6 +153,10 @@
 					$this->POD->tolog("file->save() isImage!");
 				} else {
 					$fileDir = $this->POD->libOptions('docDir');
+				}
+
+				if ($fileDir && !is_dir($fileDir)) {
+					@mkdir($fileDir, 0775, true);
 				}
 
 				$new_name = "$fileDir/" . $this->get('id') . ".original." . $this->get('extension');
@@ -289,24 +295,26 @@
 			if ($this->isImage) { 
 				$fileDir = $this->POD->libOptions('imgDir');
 /*
-				unlink("$fileDir/" . $this->get('id') . ".original." . $this->get('extension'));
+				@unlink("$fileDir/" . $this->get('id') . ".original." . $this->get('extension'));
 				unlink("$fileDir/" . $this->get('id') . ".resized." . $this->get('extension'));
 				unlink("$fileDir/" . $this->get('id') . ".thumbnail." . $this->get('extension'));
 				
 
 */
 				// find any dynamically generated resizes
-				$files = opendir($fileDir);
-				while ($file = readdir($files)) { 
-					if (preg_match("/" . $this->id . "\./",$file)) {
-						unlink($fileDir . "/" . $file);
+					if (is_dir($fileDir) && ($files = opendir($fileDir))) {
+						while (($file = readdir($files)) !== false) { 
+							if (preg_match('/' . preg_quote((string)$this->id, '/') . '\./', $file)) {
+								@unlink($fileDir . "/" . $file);
+							}
+						}
+						closedir($files);
 					}
-				}
 
-			} else {
-				$fileDir = $this->POD->libOptions('docDir');
-				unlink("$fileDir/" . $this->get('id') . ".original." . $this->get('extension'));
-			}
+				} else {
+					$fileDir = $this->POD->libOptions('docDir');
+					@unlink("$fileDir/" . $this->get('id') . ".original." . $this->get('extension'));
+				}
 		
 		}
 		
@@ -474,7 +482,7 @@
 	
 
 				// make sure we have the proper functions to handle an image
-				if (!function_exists('imagecreatefromjpeg') || !function_exists('imagecreatefrompng') || !function_exists('imagecreatefromgif')) {
+				if (!extension_loaded('gd') || (!function_exists('imagecreatefromjpeg') && !function_exists('imagecreatefrompng') && !function_exists('imagecreatefromgif'))) {
 					$this->throwError("file->resizeImage() image processing functions not present!");
 					$this->error_code = 500;
 					return false;
@@ -630,12 +638,17 @@
 	
 		}
 	
-		function output($template = 'output',$backup_path=null) {
+		function output($template = 'output',$variables = null,$sub_folder = 'files',$backup_path=null) {
 			if ($this->hasMethod(__FUNCTION__)) { 
-				return $this->override(__FUNCTION__,array($template,$backup_path));
+				return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 			}
-		
-			parent::output($template,array('file'=>$this),'files',$backup_path);
+			if ($variables === null) {
+				$variables = array('file'=>$this);
+			}
+			if ($sub_folder === null) {
+				$sub_folder = 'files';
+			}
+			return parent::output($template,$variables,$sub_folder,$backup_path);
 	
 		}
 		
@@ -700,7 +713,8 @@
 	            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
 	        );
 	
-	        $ext = strtolower(array_pop(explode('.',$filename)));
+	        $parts = explode('.',$filename);
+	        $ext = strtolower(array_pop($parts));
 	        if (array_key_exists($ext, $mime_types)) {
 	            return $mime_types[$ext];
 	        }

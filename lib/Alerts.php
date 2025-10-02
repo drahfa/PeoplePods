@@ -143,12 +143,12 @@
 	
 		}
 	
-		function output($template = 'output',$backup_path=null) {
-	
+		function output($template = 'output',$variables = null,$sub_folder = 'alerts',$backup_path=null) {
+
 			if ($this->hasMethod(__FUNCTION__)) { 
-				return $this->override(__FUNCTION__,array($template,$backup_path));
+				return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 			}
-	
+
 			$targetUser = $targetContent  = null;	
 			if ($this->targetUserId) { 
 				$targetUser = $this->POD->getPerson(array('id'=>$this->targetUserId));
@@ -162,7 +162,14 @@
 				} 
 			}
 		
-			parent::output($template,array('alert'=>$this,'targetUser'=>$targetUser,'targetContent'=>$targetContent),'alerts',$backup_path);
+			if ($variables === null) {
+				$variables = array('alert'=>$this,'targetUser'=>$targetUser,'targetContent'=>$targetContent);
+			}
+			if ($sub_folder === null) {
+				$sub_folder = 'alerts';
+			}
+
+			return parent::output($template,$variables,$sub_folder,$backup_path);
 		}
 	
 		function hasMethod($method) { 

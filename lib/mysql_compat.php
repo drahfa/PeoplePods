@@ -5,6 +5,10 @@ if (!function_exists('mysql_query')) {
         throw new RuntimeException('PeoplePods requires the mysqli extension when emulating mysql_* functions.');
     }
 
+    if (function_exists('mysqli_report')) {
+        mysqli_report(MYSQLI_REPORT_OFF);
+    }
+
     class PeoplePodsMysqlCompat
     {
         /** @var mysqli|null */
@@ -27,7 +31,7 @@ if (!function_exists('mysql_query')) {
 
     function mysql_pconnect($server = null, $username = null, $password = null)
     {
-        $link = mysqli_connect(
+        $link = @mysqli_connect(
             $server ?? ini_get('mysqli.default_host'),
             $username ?? ini_get('mysqli.default_user'),
             $password ?? ini_get('mysqli.default_pw')
@@ -45,7 +49,7 @@ if (!function_exists('mysql_query')) {
         if (!$link) {
             return false;
         }
-        return mysqli_select_db($link, $database);
+        return @mysqli_select_db($link, $database);
     }
 
     function mysql_query($query, $link_identifier = null)
@@ -54,7 +58,7 @@ if (!function_exists('mysql_query')) {
         if (!$link) {
             return false;
         }
-        return mysqli_query($link, $query);
+        return @mysqli_query($link, $query);
     }
 
     function mysql_real_escape_string($unescaped_string, $link_identifier = null)

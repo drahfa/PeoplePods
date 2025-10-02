@@ -142,9 +142,16 @@ require_once("Stack.php");
 	
 		}
 	
-		function output($template = 'thread',$backup_path=null) {
+		function output($template = 'thread',$variables = null,$sub_folder = 'messages',$backup_path=null) {
 		
-			parent::output($template,array('thread'=>$this),'messages',$backup_path);
+			if ($variables === null) {
+				$variables = array('thread'=>$this);
+			}
+			if ($sub_folder === null) {
+				$sub_folder = 'messages';
+			}
+
+			return parent::output($template,$variables,$sub_folder,$backup_path);
 	
 		}
 
@@ -310,11 +317,17 @@ Class Message extends Msg {
 	}
 
 
-	function output($template = 'message',$backup_path=null) {
+	function output($template = 'message',$variables = null,$sub_folder = 'messages',$backup_path=null) {
 		if ($this->hasMethod(__FUNCTION__)) { 
-			return $this->override(__FUNCTION__,array($template,$backup_path));
+			return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 		}
-		parent::output($template,array('message'=>$this),'messages',$backup_path);
+		if ($variables === null) {
+			$variables = array('message'=>$this);
+		}
+		if ($sub_folder === null) {
+			$sub_folder = 'messages';
+		}
+		return parent::output($template,$variables,$sub_folder,$backup_path);
 
 	}	
 

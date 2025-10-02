@@ -195,8 +195,13 @@
 				echo "<p>Now I need to figure out how to connect to the MySQL database you created for me.</p>";
 				echo "<hr />";
 			
-				if (@$_POST['mysql_server'] && @$_POST['mysql_db'] && @$_POST['mysql_user'] && @$_POST['mysql_pass']) {
-					
+				if (
+					isset($_POST['mysql_server'], $_POST['mysql_db'], $_POST['mysql_user'], $_POST['mysql_pass']) &&
+					$_POST['mysql_server'] !== '' &&
+					$_POST['mysql_db'] !== '' &&
+					$_POST['mysql_user'] !== ''
+				) {
+
 					$newDb = $POD->connectToDatabase($_POST['mysql_server'],$_POST['mysql_user'],$_POST['mysql_pass'],$_POST['mysql_db']);
 					if ($newDb) { 
 						$POD->setLibOptions('mysql_server',$_POST['mysql_server']);
@@ -254,7 +259,7 @@
 			// create first user
 	
 	
-				if ($_POST['nick'] && $_POST['email'] && $_POST['password']) {
+					if (!empty($_POST['nick']) && !empty($_POST['email']) && !empty($_POST['password'])) {
 					$NEWUSER = $POD->getPerson(array('nick'=>$_POST['nick'],'email'=>$_POST['email'],'password'=>$_POST['password']));
 					$NEWUSER->save(true);
 					if ($NEWUSER->success()) {

@@ -73,19 +73,25 @@
 					$this->baseConditions['d.hidden']='0';
 				}
 
-				if (isset($baseConditions)) { 
-					if (is_array($baseConditions)) { 
-					//	$bc = implode(",",$baseConditions);
-						$bc = "";
-						foreach ($baseConditions as $key=>$value) { 
-							$bc .= "$key=$value,";
+					if (isset($baseConditions)) { 
+						if (is_array($baseConditions)) { 
+							$parts = array();
+							foreach ($baseConditions as $key=>$value) { 
+								if (is_array($value)) {
+									$parts[] = $key . '=' . json_encode($value);
+								} else if (is_scalar($value) || $value === null) {
+									$parts[] = $key . '=' . (string)$value;
+								} else {
+									$parts[] = $key . '=' . json_encode($value);
+								}
+							}
+							$bc = implode(',', $parts);
+						} else {
+							$bc = (string)$baseConditions;
 						}
 					} else {
-						$bc = $baseConditions;
+						$bc = "NO CONDITIONS";
 					}
-				} else {
-					$bc = "NO CONDITIONS";
-				}
 				$this->POD->tolog("stack->new: $type offset=$offset count=$count WHERE=$bc");
 				
 				$this->baseSelect = $select;

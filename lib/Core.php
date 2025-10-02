@@ -80,12 +80,17 @@ class PeoplePod {
 		$this->tolog("CREATING NEW PEOPLEPOD");
 
 		if ($this->USE_SESSIONS) { 
-			// turn on PHP session handling
-			if (!session_id() && !session_start()) { 
-				$this->USE_SESSIONS = false;
-				$this->tolog("Tried to use PHP sessions but failed. Reverting to temporary mem cache");
-			} else {
+			// turn on PHP session handling – only adjust cache settings before a session starts
+			$sessionStatus = function_exists('session_status') ? session_status() : null;
+			if ($sessionStatus === PHP_SESSION_NONE || !session_id()) {
 				session_cache_expire(10);
+				if (!session_start()) {
+					$this->USE_SESSIONS = false;
+					$this->tolog("Tried to use PHP sessions but failed. Reverting to temporary mem cache");
+				}
+			} else if ($sessionStatus === PHP_SESSION_DISABLED) {
+				$this->USE_SESSIONS = false;
+				$this->tolog("PHP sessions are disabled. Reverting to temporary mem cache");
 			}
 		}		
 
@@ -307,48 +312,49 @@ class PeoplePod {
 	function writeHTACCESS($htaccessPath) {	
 
 		$this->success = false;
+		$rewriteRules = '';
+		$existingHtaccess = '';
+		$htaccessFile = rtrim($htaccessPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.htaccess';
+
 		// iterate through each pod we know about.
 	 	foreach ($this->PODS as $name => $podling) {
-			if ($this->libOptions('enable_' . $name)) {
+			if ($this->libOptions('enable_' . $name) && !empty($podling['rules'])) {
 				foreach ($podling['rules'] as $pattern => $rewrite) {
-					$REWRITE_RULES .= "\n# $name\n";			
+					$rewriteRules .= "\n# $name\n";			
 					$rewrite = $this->libOptions('siteRoot') . $this->libOptions('podRoot') . "/pods/" . $rewrite;
-					$REWRITE_RULES .= "RewriteRule $pattern\t$rewrite\t[QSA,L]\n";
+					$rewriteRules .= "RewriteRule $pattern\t$rewrite\t[QSA,L]\n";
 				} 
 			}
 		}
 
-		// create the .htaccess file
-		$handle = fopen("$htaccessPath/.htaccess","r");
-		if ($handle) {
-			// if an .htaccess file already exists, find the current peopelpods rules and get rid of them.
-			$htaccess = fread($handle,100000);
-			fclose($handle);
-			
-			// find peoplepods chunk				
-			preg_match("/(# BEGIN PEOPLEPODS RULES.*?# END PEOPLEPODS RULES)/is",$htaccess,$matches);
-			if ($matches[1]) {
-				$peoplepods_rules = $matches[1];
-				$htaccess = preg_replace("/# BEGIN PEOPLEPODS RULES.*?# END PEOPLEPODS RULES/is","",$htaccess);			
+		if (is_file($htaccessFile) && is_readable($htaccessFile)) {
+			$existingHtaccess = (string)file_get_contents($htaccessFile);
+			if ($existingHtaccess !== '') {
+				// strip any pre-existing PeoplePods block
+				$existingHtaccess = preg_replace("/# BEGIN PEOPLEPODS RULES.*?# END PEOPLEPODS RULES/is","",$existingHtaccess);
 			}
 		} else {
-			$this->throwError("Can't open .htaccess file!  Check file permissions on " . $htaccessPath . "/.htaccess"); 
-			return $this->error();
+			// ensure parent directory exists and is writable so we can create the file
+			if (!is_dir($htaccessPath) || !is_writable($htaccessPath)) {
+				$this->throwError("Can't open .htaccess file!  Check file permissions on " . $htaccessPath . "/.htaccess"); 
+				return $this->error();
+			}
 		}
-				
-		$REWRITE_RULES = "# BEGIN PEOPLEPODS RULES\n#####################################\n" .
+
+		$rewriteRules = "# BEGIN PEOPLEPODS RULES\n#####################################\n" .
 					 "# turn the RewriteEngine on so that these fancy rewrite rules work\nRewriteEngine On\n" .
-					 $REWRITE_RULES .
+					 $rewriteRules .
 					 "\n#####################################\n# END PEOPLEPODS RULES";
 
-		$handle = fopen("$htaccessPath/.htaccess","w");
-		if (!fwrite($handle,$REWRITE_RULES . "\n\n" . $htaccess )) {
+		// prepend the new block and trim extra blank space
+		$contents = rtrim($rewriteRules) . "\n\n" . ltrim($existingHtaccess);
+		if (file_put_contents($htaccessFile, $contents) === false) {
 			$this->throwError("Can't open .htaccess file!  Check file permissions on " . $htaccessPath . "/.htaccess"); 
 			return $this->error();
-		} else {
-			$this->success = true;
-			return "Successfully wrote to .htaccess";
 		}
+
+		$this->success = true;
+		return "Successfully wrote to .htaccess";
 
 	}
 

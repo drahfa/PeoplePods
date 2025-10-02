@@ -42,12 +42,17 @@
 	
 		}
 	
-		function output($template = 'tag',$backup_path=null) {
+		function output($template = 'tag',$variables = null,$sub_folder = 'content',$backup_path=null) {
 			if ($this->hasMethod(__FUNCTION__)) { 
-				return $this->override(__FUNCTION__,array($template,$backup_path));
+				return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 			}
-		
-			parent::output($template,array('tag'=>$this),'content',$backup_path);
+			if ($variables === null) {
+				$variables = array('tag'=>$this);
+			}
+			if ($sub_folder === null) {
+				$sub_folder = 'content';
+			}
+			return parent::output($template,$variables,$sub_folder,$backup_path);
 	
 		}
 	

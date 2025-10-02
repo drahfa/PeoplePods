@@ -845,13 +845,20 @@ class Group extends Obj {
 	
 		}
 	
-		function output($template = 'output',$backup_path=null) {
+		function output($template = 'output',$variables = null,$sub_folder = 'groups',$backup_path=null) {
 		
 			if ($this->hasMethod(__FUNCTION__)) { 
-				return $this->override(__FUNCTION__,array($template,$backup_path));
+				return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 			}
 
-			parent::output($template,array('group'=>$this),'groups',$backup_path);
+			if ($variables === null) {
+				$variables = array('group'=>$this);
+			}
+			if ($sub_folder === null) {
+				$sub_folder = 'groups';
+			}
+
+			return parent::output($template,$variables,$sub_folder,$backup_path);
 	
 		}
 		

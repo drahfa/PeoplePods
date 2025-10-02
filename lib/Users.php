@@ -709,11 +709,17 @@ class Person extends Obj {
 
 	}
 
-	function output($template = 'output',$backup_path=null) {
+	function output($template = 'output',$variables = null,$sub_folder = 'people',$backup_path=null) {
 		if ($this->hasMethod(__FUNCTION__)) { 
-			return $this->override(__FUNCTION__,array($template,$backup_path));
+			return $this->override(__FUNCTION__,array($template,$variables,$sub_folder,$backup_path));
 		}
-		parent::output($template,array('user'=>$this),'people',$backup_path);
+		if ($variables === null) {
+			$variables = array('user'=>$this);
+		}
+		if ($sub_folder === null) {
+			$sub_folder = 'people';
+		}
+		return parent::output($template,$variables,$sub_folder,$backup_path);
 
 	}
 
@@ -1380,18 +1386,20 @@ class Person extends Obj {
 		$this->POD->tolog($sql,2);
 		$res = mysql_query($sql,$this->POD->DATABASE);
 		$num = mysql_num_fields($res);
-		if ($num > 0) {
-			$error = mysql_fetch_assoc($res);
-			mysql_free_result($res);
-			if ($error['nicktaken']==1) {	
-				return 'nick_taken';
-			} 
-			if ($error['emailtaken']==1) {
-				return 'email_taken';
+			if ($num > 0) {
+				$error = mysql_fetch_assoc($res);
+				mysql_free_result($res);
+				if ($error) {
+					if (!empty($error['nicktaken'])) {	
+						return 'nick_taken';
+					} 
+					if (!empty($error['emailtaken'])) {
+						return 'email_taken';
+					}
+				}
+			} else {
+				return;
 			}
-		} else {
-			return;
-		}
 	
 	}
 
