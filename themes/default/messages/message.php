@@ -13,9 +13,9 @@
 /**********************************************/
 ?>
 <div class="message">
-	<? $message->from()->output('avatar'); ?>
+	<?php  $message->from()->output('avatar'); ?>
 	<div class="attributed_content">
-		<? 	echo $message->from()->get('nick') . " said, (<a href=\"#" . $message->get('id') . "\">" . $this->POD->timesince($message->get('minutes')) . "</a>)"; ?>
+		<?php  	echo $message->from()->get('nick') . " said, (<a href=\"#" . $message->get('id') . "\">" . $this->POD->timesince($message->get('minutes')) . "</a>)"; ?>
 		<?= $message->writeFormatted('message'); ?>
 	</div>
 	<div class="clearer"></div>

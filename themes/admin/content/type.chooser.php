@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 	// we're gonna do some raw sql stuff here to pull all the different values for type
 	$sql = "SELECT distinct type FROM content;";
@@ -20,11 +21,11 @@
 
 <p>What type of content would you like to create?</p>
 
-<? foreach ($types as $type) { ?>
+<?php  foreach ($types as $type) { ?>
 
 	<p><a href="?type=<?= urlencode($type); ?>"><?= ucfirst($type); ?></a></p>
 
-<? } ?>
+<?php  } ?>
 
 	<form method="get">
 		<input name="type" class="repairField" default="new content type" />

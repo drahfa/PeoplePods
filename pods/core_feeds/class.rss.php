@@ -125,7 +125,7 @@ class rss {
     function startRSS($path = '.', $filename = 'rss'){
         $this->path = $path;
         $this->filename = $filename;
-        $this->rss = '<?xml version="1.0"';
+        $this->rss = '<?php xml version="1.0"';
         if(!empty($this->encoding)){ $this->rss .= ' encoding="' . $this->encoding . '"'; }
         $this->rss .= '?>' . "\n";
         $this->rss .= '<rss version="2.0">' . "\n";

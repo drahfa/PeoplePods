@@ -1,4 +1,5 @@
-<? /*
+<?php
+ /*
  	Always available:
 
 	$activity - object representing the activity stream post

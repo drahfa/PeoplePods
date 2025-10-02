@@ -1,9 +1,9 @@
-<?
+<?php
 
 Class Msg extends Obj {
 
-	function Msg($POD,$type,$object_definition) { 
-		parent::Obj($POD,$type,$object_definition);
+	function __construct($POD,$type,$object_definition) { 
+		parent::__construct($POD,$type,$object_definition);
 
 		$this->success = true;
 		return $this;	
@@ -82,8 +82,14 @@ Class Msg extends Obj {
 		
 		$str = $this->chooseMessage($displayToUserId);
 
-		$str = preg_replace("/\{actor\.(.*?)\}/e",'$this->actor()->permalink("\\1",true)',$str);
-		$str = preg_replace("/@actor\.(\w+)\b/e",'$this->actor()->get("\\1")',$str);
+		$str = preg_replace_callback('/\{actor\.(.*?)\}/', function ($matches) {
+			$actor = $this->actor();
+			return ($actor && method_exists($actor, 'permalink')) ? $actor->permalink($matches[1], true) : '';
+		}, $str);
+		$str = preg_replace_callback('/@actor\.(\w+)\b/', function ($matches) {
+			$actor = $this->actor();
+			return $actor ? (string)$actor->get($matches[1]) : '';
+		}, $str);
 		
 		if ($this->targetUserId) { 
 			$targetUser = $this->POD->getPerson(array('id'=>$this->targetUserId));
@@ -91,8 +97,12 @@ Class Msg extends Obj {
 				$targetUser->nick = 'DELETED';
 				$targetUser->permalink='#';
 			}
-			$str = preg_replace("/\{targetUser\.(.*?)\}/e",'$targetUser->permalink("\\1",true)',$str);
-			$str = preg_replace("/@targetUser\.(\w+)\b/e",'$targetUser->get("\\1")',$str);
+			$str = preg_replace_callback('/\{targetUser\.(.*?)\}/', function ($matches) use ($targetUser) {
+				return ($targetUser && method_exists($targetUser, 'permalink')) ? $targetUser->permalink($matches[1], true) : '';
+			}, $str);
+			$str = preg_replace_callback('/@targetUser\.(\w+)\b/', function ($matches) use ($targetUser) {
+				return $targetUser ? (string)$targetUser->get($matches[1]) : '';
+			}, $str);
 
 		}
 
@@ -105,8 +115,12 @@ Class Msg extends Obj {
 				$targetContent = $this->POD->getGroup(array('id'=>$this->targetContentId));				
 			} 
 			
-			$str = preg_replace("/\{targetContent\.(.*?)\}/e",'$targetContent->permalink("\\1",true)',$str);
-			$str = preg_replace("/@targetContent\.(\w+)\b/e",'$targetContent->get("\\1")',$str);
+			$str = preg_replace_callback('/\{targetContent\.(.*?)\}/', function ($matches) use ($targetContent) {
+				return ($targetContent && method_exists($targetContent, 'permalink')) ? $targetContent->permalink($matches[1], true) : '';
+			}, $str);
+			$str = preg_replace_callback('/@targetContent\.(\w+)\b/', function ($matches) use ($targetContent) {
+				return $targetContent ? (string)$targetContent->get($matches[1]) : '';
+			}, $str);
 
 		}
 		if ($this->resultContentId) {
@@ -115,8 +129,12 @@ Class Msg extends Obj {
 			} else if ($this->resultContentType=='comment') { 
 				$resultContent = $this->POD->getComment(array('id'=>$this->resultContentId));				
 			} 
-			$str = preg_replace("/\{resultContent\.(.*?)\}/e",'$resultContent->permalink("\\1",true)',$str);
-			$str = preg_replace("/@resultContent\.(\w+)\b/e",'$resultContent->get("\\1")',$str);
+			$str = preg_replace_callback('/\{resultContent\.(.*?)\}/', function ($matches) use ($resultContent) {
+				return ($resultContent && method_exists($resultContent, 'permalink')) ? $resultContent->permalink($matches[1], true) : '';
+			}, $str);
+			$str = preg_replace_callback('/@resultContent\.(\w+)\b/', function ($matches) use ($resultContent) {
+				return $resultContent ? (string)$resultContent->get($matches[1]) : '';
+			}, $str);
 		}
 		
 

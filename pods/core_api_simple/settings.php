@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 
 $POD->registerPOD(
 	"core_api_simple",

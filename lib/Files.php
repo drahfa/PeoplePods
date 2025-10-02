@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -34,8 +35,8 @@
 		static private $EXTRA_METHODS = array();
 		protected $GROUP;
 	
-		function File($POD,$PARAMETERS = null) { 
-			parent::Obj($POD,'file',array(
+		function __construct($POD,$PARAMETERS = null) { 
+			parent::__construct($POD,'file',array(
 				'table_name' => "files",
 				'table_shortname' => "f",
 				'fields' => self::$DEFAULT_FIELDS,

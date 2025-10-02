@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 	include_once("../../PeoplePods.php");		
 	$POD = new PeoplePod(array('debug'=>0,'lockdown'=>'adminUser','authSecret'=>@$_COOKIE['pp_auth']));
 	$POD->changeTheme('admin');
@@ -52,11 +53,11 @@
 		<div class="list_panel">
 			<h1><?= $title; ?></h1>
 	
-				<? $users->output('short_grid','people_header','table_pager',null,'No people found'); ?>
+				<?php  $users->output('short_grid','people_header','table_pager',null,'No people found'); ?>
 				
 		</div>			
 	
-		<?
+		<?php 
 
 		$POD->footer();
 	
@@ -65,14 +66,14 @@
 		if (isset($message)) { ?>
 		
 			<div class="info">
-				<? echo $message; ?>
+				<?php  echo $message; ?>
 			</div>
 		
-		<? } 
+		<?php  } 
 		
 		if ($users->count() > 0 ) { ?>
 
-		<?	 while ($user = $users->getNext()) { 
+		<?php 	 while ($user = $users->getNext()) { 
 			 	$user->output('addMember');
 			 }
 				 

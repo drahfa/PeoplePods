@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -33,10 +34,10 @@ class Group extends Obj {
 	static private $FIELD_PROCESSORS = array();	
 	static private $EXTRA_METHODS = array();
 	
-	function Group($POD,$PARAMETERS = null) {
+	function __construct($POD,$PARAMETERS = null) {
 		
 		$this->success = null;
-		parent::Obj($POD,'group',array(
+		parent::__construct($POD,'group',array(
 			'table_name' => "groups",
 			'table_shortname' => "g",
 			'fields' => self::$DEFAULT_FIELDS,

@@ -1,4 +1,5 @@
 <?php
+
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -14,21 +15,21 @@
 * http://peoplepods.net/readme/themes
 /**********************************************/
 ?>
-<?
+<?php 
 $subject='Reset Your Password on ' . $sender->POD->siteName(false);;
 ?>
-Hey <? $sender->write('nick') ?>,
+Hey <?php  $sender->write('nick') ?>,
 
 We received a request to reset your password.  Click below to do so.
 
-<? $sender->POD->siteRoot(); ?>/password_reset/<? $sender->write('passwordResetCode'); ?>
+<?php  $sender->POD->siteRoot(); ?>/password_reset/<?php  $sender->write('passwordResetCode'); ?>
 
 
 If you didn't request this password reset code, you can safely ignore this email.
 
 Love,
-<? $sender->POD->siteName(); ?>
+<?php  $sender->POD->siteName(); ?>
 
 
 You can update your account here:
-<? $sender->POD->siteRoot(); ?>/editprofile
+<?php  $sender->POD->siteRoot(); ?>/editprofile

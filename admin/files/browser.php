@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 
 	include_once("../../PeoplePods.php");
 	
@@ -20,7 +21,7 @@
 		
 		<div id="fileBrowser_list">
 		
-		<?
+		<?php 
 		// output an upload form
 		$content->output('browser.upload');
 				
@@ -32,7 +33,7 @@
 		<div id="fileBrowser_details" style="display:none;">
 			
 		</div>		
-		<?
+		<?php 
 	} else if ($mode=='details') { 
 
 		$content = $POD->getContent(array('id'=>$_GET['docId']));

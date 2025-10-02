@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 	include_once("../../PeoplePods.php");	
 	$POD = new PeoplePod(array('lockdown'=>'adminUser','authSecret'=>@$_COOKIE['pp_auth']));
@@ -42,15 +43,15 @@
 	$current_tab="themes";
 
 	?>	
-	<? include_once("option_nav.php"); ?>
-	<? if ($message) { ?>
+	<?php  include_once("option_nav.php"); ?>
+	<?php  if ($message) { ?>
 		<div class="info">
 		
-			<? echo $message ?>
+			<?php  echo $message ?>
 			
 		</div>
 	
-	<? } ?>
+	<?php  } ?>
 	<div class="list_panel">
 	<h1>Themes</h1>
 
@@ -59,23 +60,23 @@
 	</p>
 
 	<p>
-		New themes should be placed in <i><? echo $POD->libOptions('installDir'); ?>/themes</i>
+		New themes should be placed in <i><?php  echo $POD->libOptions('installDir'); ?>/themes</i>
 	</p>	
 
 	
 	<div id="themes">
 		<h2>Installed Themes</h2>
-		<? foreach ($themes as $theme) { ?>
-			<div class="theme <? if ($currentTheme==$theme['theme']) { ?>active_theme<? } ?>">
-				<h3><? echo $theme['name']; ?></h3>
-				<? echo $POD->formatText($theme['description']); ?>
-				<? if ($currentTheme!=$theme['theme'] && $theme['theme']!='admin') { ?>
+		<?php  foreach ($themes as $theme) { ?>
+			<div class="theme <?php  if ($currentTheme==$theme['theme']) { ?>active_theme<?php  } ?>">
+				<h3><?php  echo $theme['name']; ?></h3>
+				<?php  echo $POD->formatText($theme['description']); ?>
+				<?php  if ($currentTheme!=$theme['theme'] && $theme['theme']!='admin') { ?>
 				<p><a href="?activate=<?= $theme['theme']; ?>">Activate</a></p>			
-				<? } ?>
+				<?php  } ?>
 			</div>
-		<? } ?>
+		<?php  } ?>
 	</div>
 		
 	</div>
 	
-	<? $POD->footer();	?>
+	<?php  $POD->footer();	?>

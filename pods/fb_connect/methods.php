@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 function fb_connect_settings() { 
 

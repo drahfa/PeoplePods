@@ -1,4 +1,5 @@
-<?
+<?php
+
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -37,7 +38,7 @@
 		static private $EXTRA_METHODS = array();
 
 
-		function Stack($POD,$type,$baseConditions=null,$sort=null,$count=20,$offset=0,$from=null,$select=null,$groupBy=null,$cacheAs=null) {
+		function __construct($POD,$type,$baseConditions=null,$sort=null,$count=20,$offset=0,$from=null,$select=null,$groupBy=null,$cacheAs=null) {
 		
 			$this->position = 0;
 		

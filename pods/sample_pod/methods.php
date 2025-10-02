@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 	
 	// return an array of variables that should be captured in the settings screen

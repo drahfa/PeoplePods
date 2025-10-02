@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 
 	include_once("../../PeoplePods.php");	
 	
@@ -28,10 +29,10 @@
 		if (isset($message)) { ?>
 		
 			<div class="info">
-				<? echo $message; ?>
+				<?php  echo $message; ?>
 			</div>
 		
-		<? } 
+		<?php  } 
 		if ($file->success()) {
 			$file->output();
 		}			
@@ -152,26 +153,26 @@
 		if ($message) { ?>
 		
 			<div class="info">
-				<? echo $message; ?>
+				<?php  echo $message; ?>
 			</div>
 		
-		<? } ?>
+		<?php  } ?>
 		<div class="list_panel">
 			<h1>Files: <?= $title; ?></h1>
-			<?	
+			<?php 	
 				
 				$files->output('short','file_header','table_pager');
 				
 			?>
 		</div>
-		<?	if ($newfile) { ?>
+		<?php 	if ($newfile) { ?>
 			<div class="panel">
-				<? $newfile->output('upload'); ?>
+				<?php  $newfile->output('upload'); ?>
 			</div>
-		<? } ?>
+		<?php  } ?>
 
-	<?	
+	<?php 	
 		$POD->footer(); 
 	
 	?>
-<? } // if !$_GET['id'] ?>
+<?php  } // if !$_GET['id'] ?>

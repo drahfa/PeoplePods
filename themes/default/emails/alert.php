@@ -1,4 +1,5 @@
 <?php
+
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -14,7 +15,7 @@
 * http://peoplepods.net/readme/themes
 /**********************************************/
 ?>
-<? 
+<?php  
 
 $subject= 'There has been activity on your account at ' . $POD->siteName(false);
 ?>
@@ -28,8 +29,8 @@ Check it out here:
 
 
 Love,
-<? $sender->POD->siteName(); ?>
+<?php  $sender->POD->siteName(); ?>
 
 
 You can update your account here:
-<? $sender->POD->siteRoot(); ?>/editprofile
+<?php  $sender->POD->siteRoot(); ?>/editprofile

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 
 	$POD->registerPOD(
 		"core_files", // name of pod

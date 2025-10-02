@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 function twitter_connect_settings() { 
 

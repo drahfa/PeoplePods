@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -30,9 +31,9 @@
 		static private $EXTRA_METHODS = array();
 	
 
-		function Comment($POD,$PARAMETERS=null) {
+	function __construct($POD,$PARAMETERS=null) {
 	
-			parent::Obj($POD,'comment',array(
+			parent::__construct($POD,'comment',array(
 				'table_name' => "comments",
 				'table_shortname' => "c",
 				'fields' => self::$DEFAULT_FIELDS,

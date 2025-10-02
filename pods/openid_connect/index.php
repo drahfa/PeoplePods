@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 	include_once("../../PeoplePods.php");
 	$POD = new PeoplePod(array('debug'=>2,'authSecret'=>@$_COOKIE['pp_auth']));
@@ -210,7 +211,7 @@
 	     * earlier.
 	     */
 	    $store = getStore($POD);
-	    $consumer =& new Auth_OpenID_Consumer($store);
+	    $consumer = new Auth_OpenID_Consumer($store);
 	    return $consumer;
 	}
 

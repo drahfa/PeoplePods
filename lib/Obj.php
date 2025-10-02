@@ -39,7 +39,7 @@
 		private $FIELD_PROCESSORS = array();
 		static private $EXTRA_METHODS = array();
 				
-		function Obj($POD,$type,$object_definition=null) { 
+		function __construct($POD,$type,$object_definition=null) { 
 			if ($POD && $type) { 
 				$this->POD = $POD;
 				$this->TYPE = $type;
@@ -1770,22 +1770,61 @@
 		}
 
 
-		function tokenReplace($str) { 
+		function tokenReplace($str) {
+			$valueResolver = function ($value) {
+				if (is_object($value)) {
+					return method_exists($value, '__toString') ? (string)$value : '';
+				}
+				if (is_array($value)) {
+					return '';
+				}
+				return (string)($value ?? '');
+			};
 
-			$str = preg_replace("/\{this\.(.*?)\}/e",'$this->get("\\1")',$str);
-			$str = preg_replace("/@this\.(\w+)\b/e",'$this->get("\\1")',$str);
-				
-			$str = preg_replace("/\{author\.(.*?)\}/e",'$this->author()->get("\\1")',$str);
-			$str = preg_replace("/@author\.(\w+)\b/e",'$this->author()->get("\\1")',$str);
-			$str = preg_replace("/\{owner\.(.*?)\}/e",'$this->owner()->get("\\1")',$str);
-			$str = preg_replace("/@owner\.(\w+)\b/e",'$this->owner()->get("\\1")',$str);
-			$str = preg_replace("/\{creator\.(.*?)\}/e",'$this->creator()->get("\\1")',$str);
-			$str = preg_replace("/@creator\.(\w+)\b/e",'$this->creator()->get("\\1")',$str);
-			$str = preg_replace("/\{parent\.(.*?)\}/e",'$this->parent()->get("\\1")',$str);
-			$str = preg_replace("/@parent\.(\w+)\b/e",'$this->parent()->get("\\1")',$str);
+			$str = preg_replace_callback('/\{this\.(.*?)\}/', function ($matches) use ($valueResolver) {
+				return $valueResolver($this->get($matches[1]));
+			}, $str);
+			$str = preg_replace_callback('/@this\.(\w+)\b/', function ($matches) use ($valueResolver) {
+				return $valueResolver($this->get($matches[1]));
+			}, $str);
+
+			$str = preg_replace_callback('/\{author\.(.*?)\}/', function ($matches) use ($valueResolver) {
+				$author = $this->author();
+				return $author ? $valueResolver($author->get($matches[1])) : '';
+			}, $str);
+			$str = preg_replace_callback('/@author\.(\w+)\b/', function ($matches) use ($valueResolver) {
+				$author = $this->author();
+				return $author ? $valueResolver($author->get($matches[1])) : '';
+			}, $str);
+
+			$str = preg_replace_callback('/\{owner\.(.*?)\}/', function ($matches) use ($valueResolver) {
+				$owner = $this->owner();
+				return $owner ? $valueResolver($owner->get($matches[1])) : '';
+			}, $str);
+			$str = preg_replace_callback('/@owner\.(\w+)\b/', function ($matches) use ($valueResolver) {
+				$owner = $this->owner();
+				return $owner ? $valueResolver($owner->get($matches[1])) : '';
+			}, $str);
+
+			$str = preg_replace_callback('/\{creator\.(.*?)\}/', function ($matches) use ($valueResolver) {
+				$creator = $this->creator();
+				return $creator ? $valueResolver($creator->get($matches[1])) : '';
+			}, $str);
+			$str = preg_replace_callback('/@creator\.(\w+)\b/', function ($matches) use ($valueResolver) {
+				$creator = $this->creator();
+				return $creator ? $valueResolver($creator->get($matches[1])) : '';
+			}, $str);
+
+			$str = preg_replace_callback('/\{parent\.(.*?)\}/', function ($matches) use ($valueResolver) {
+				$parent = $this->parent();
+				return $parent ? $valueResolver($parent->get($matches[1])) : '';
+			}, $str);
+			$str = preg_replace_callback('/@parent\.(\w+)\b/', function ($matches) use ($valueResolver) {
+				$parent = $this->parent();
+				return $parent ? $valueResolver($parent->get($matches[1])) : '';
+			}, $str);
 
 			return $str;
-	
 		}
 		
 		function table_shortname() {

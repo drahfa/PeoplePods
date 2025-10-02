@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 
 $POD->registerPOD("openid_connect",'Add an OpenID account',array(
 "^openid$"=>"openid_connect/index.php",

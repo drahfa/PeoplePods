@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 
 
 	$content_type ='document';

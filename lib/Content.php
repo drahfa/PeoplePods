@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -46,8 +47,8 @@
 		* @var array Associative array of parameters that MUST include POD, but may also include id or stub to load, or a list of default values.
 		* @return Content New object
 		*/ 
-		function Content($POD,$PARAMETERS=null) {
-				parent::Obj($POD,'content',array(
+		function __construct($POD,$PARAMETERS=null) {
+				parent::__construct($POD,'content',array(
 					'table_name' => "content",
 					'table_shortname' => "d",
 					'fields' => self::$DEFAULT_FIELDS,

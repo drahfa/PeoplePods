@@ -1,4 +1,5 @@
-<?
+<?php
+
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -39,8 +40,8 @@ class Person extends Obj {
 	static private $FIELD_PROCESSORS = array();			
 	static private $EXTRA_METHODS = array();
 
-	function Person($POD,$PARAMETERS=null) {
-		parent::Obj($POD,'user',array(
+	function __construct($POD,$PARAMETERS=null) {
+		parent::__construct($POD,'user',array(
 			'table_name' => "users",
 			'table_shortname' => "u",
 			'fields' => self::$DEFAULT_FIELDS,

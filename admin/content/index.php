@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 
 	include_once("../../PeoplePods.php");	
 	
@@ -189,11 +190,11 @@
 	if (@$message) { ?>
 	
 		<div class="info">
-			<? echo $message; ?>
+			<?php  echo $message; ?>
 		</div>
 	
-	<? } ?>
-<?	
+	<?php  } ?>
+<?php 	
 	
 	if ($doc->type) { 
 		$doc->output();	

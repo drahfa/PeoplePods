@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -18,8 +19,8 @@
 		static private $EXTRA_METHODS = array();
 
 
-		function Activity($POD,$PARAMETERS=null) { 
-			parent::Msg($POD,'activity',array(
+		function __construct($POD,$PARAMETERS=null) { 
+			parent::__construct($POD,'activity',array(
 					'table_name'=>'activity',
 					'table_shortname'=>'a',
 					'fields'=>array('id','date','userId','targetUserId','targetContentId','targetContentType','resultContentId','resultContentType','message','userMessage','targetMessage','gid'),

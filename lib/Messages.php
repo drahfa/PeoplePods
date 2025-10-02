@@ -1,4 +1,5 @@
-<?
+<?php
+
 
 
 /***********************************************
@@ -23,7 +24,7 @@ require_once("Stack.php");
 
 		protected $UNREAD_COUNT = 0;
 			
-		function Inbox($POD,$count = 20, $offset = 0) { 
+		function __construct($POD,$count = 20, $offset = 0) { 
 		
 			$this->POD = $POD;
 			
@@ -47,7 +48,7 @@ require_once("Stack.php");
 			$tables = 'FROM messages m';
 			$select = 'SELECT m.targetUserId as id, m.userId as ownerId,m.targetUserId,max(m.date) as latestMessage,(TIME_TO_SEC(TIMEDIFF(NOW(),max(date))) / 60) as minutes';
 		
-			parent::Stack($POD,'threads',$conditions,$sort,$count,$offset,$tables,$select);
+			parent::__construct($POD,'threads',$conditions,$sort,$count,$offset,$tables,$select);
 			return $this;
 
 			
@@ -74,10 +75,10 @@ require_once("Stack.php");
 		public $RECIPIENT;
 		protected $UNREAD_COUNT = 0;
 		
-		function Thread($POD,$threadInfo=null) {
+		function __construct($POD,$threadInfo=null) {
 
 				
-			parent::Obj($POD,'thread');
+			parent::__construct($POD,'thread');
 			if (!$this->success()) {
 				return $this;
 			}	 		
@@ -187,8 +188,8 @@ require_once("Stack.php");
 Class Message extends Msg {
 	static private $EXTRA_METHODS = array();
 
-	function Message($POD,$PARAMETERS=null) { 
-		parent::Msg($POD,'message',array(
+	function __construct($POD,$PARAMETERS=null) { 
+		parent::__construct($POD,'message',array(
 				'table_name'=>'messages',
 				'table_shortname'=>'m',
 				'fields'=>array('id','userId','targetUserId','fromId','message','date','status'),

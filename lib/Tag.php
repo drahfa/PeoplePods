@@ -1,4 +1,5 @@
-<? 
+<?php
+ 
 /***********************************************
 * This file is part of PeoplePods
 * (c) xoxco, inc  
@@ -16,9 +17,9 @@
 	
 		static private $EXTRA_METHODS = array();
 
-		function Tag($POD,$PARAMETERS=null) {
+	function __construct($POD,$PARAMETERS=null) {
 	
-			parent::Obj($POD,'tag');
+			parent::__construct($POD,'tag');
 			if (!$this->success()) {
 				return $this;
 			}

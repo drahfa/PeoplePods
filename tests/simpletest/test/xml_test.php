@@ -24,7 +24,7 @@ class TestOfXmlStructureParsing extends UnitTestCase {
         $listener->expectNever('paintCaseStart');
         $listener->expectNever('paintCaseEnd');
         $parser = &new SimpleTestXmlParser($listener);
-        $this->assertTrue($parser->parse("<?xml version=\"1.0\"?>\n"));
+        $this->assertTrue($parser->parse("<?php xml version=\"1.0\"?>\n"));
         $this->assertTrue($parser->parse("<run>\n"));
         $this->assertTrue($parser->parse("</run>\n"));
     }
@@ -34,7 +34,7 @@ class TestOfXmlStructureParsing extends UnitTestCase {
         $listener->expectOnce('paintGroupStart', array('a_group', 7));
         $listener->expectOnce('paintGroupEnd', array('a_group'));
         $parser = &new SimpleTestXmlParser($listener);
-        $parser->parse("<?xml version=\"1.0\"?>\n");
+        $parser->parse("<?php xml version=\"1.0\"?>\n");
         $parser->parse("<run>\n");
         $this->assertTrue($parser->parse("<group size=\"7\">\n"));
         $this->assertTrue($parser->parse("<name>a_group</name>\n"));
@@ -47,7 +47,7 @@ class TestOfXmlStructureParsing extends UnitTestCase {
         $listener->expectOnce('paintCaseStart', array('a_case'));
         $listener->expectOnce('paintCaseEnd', array('a_case'));
         $parser = &new SimpleTestXmlParser($listener);
-        $parser->parse("<?xml version=\"1.0\"?>\n");
+        $parser->parse("<?php xml version=\"1.0\"?>\n");
         $parser->parse("<run>\n");
         $this->assertTrue($parser->parse("<case>\n"));
         $this->assertTrue($parser->parse("<name>a_case</name>\n"));
@@ -62,7 +62,7 @@ class TestOfXmlStructureParsing extends UnitTestCase {
         $listener->expectOnce('paintMethodStart', array('a_method'));
         $listener->expectOnce('paintMethodEnd', array('a_method'));
         $parser = &new SimpleTestXmlParser($listener);
-        $parser->parse("<?xml version=\"1.0\"?>\n");
+        $parser->parse("<?php xml version=\"1.0\"?>\n");
         $parser->parse("<run>\n");
         $parser->parse("<case>\n");
         $parser->parse("<name>a_case</name>\n");
@@ -83,7 +83,7 @@ class TestOfXmlStructureParsing extends UnitTestCase {
         $listener->expectCallCount('paintGroupEnd', 2);
 
         $parser = &new SimpleTestXmlParser($listener);
-        $parser->parse("<?xml version=\"1.0\"?>\n");
+        $parser->parse("<?php xml version=\"1.0\"?>\n");
         $parser->parse("<run>\n");
 
         $this->assertTrue($parser->parse("<group size=\"7\">\n"));
@@ -103,7 +103,7 @@ class AnyOldSignal {
 class TestOfXmlResultsParsing extends UnitTestCase {
 
     function sendValidStart(&$parser) {
-        $parser->parse("<?xml version=\"1.0\"?>\n");
+        $parser->parse("<?php xml version=\"1.0\"?>\n");
         $parser->parse("<run>\n");
         $parser->parse("<case>\n");
         $parser->parse("<name>a_case</name>\n");
