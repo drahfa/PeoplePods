@@ -30,7 +30,7 @@
             <a href="<?php $POD->siteRoot(); ?>/privacy">Privacy</a>
             <span>&copy; <?php echo date('Y'); ?> <?php $POD->siteName(); ?></span>
         </section>
-        </aside>
-    </div>
+    </aside>
+</div>
 </body>
 </html>

@@ -2,6 +2,9 @@
 /***********************************************
 * Twitter style short body for content listings
 **********************************************/
+$commentWrapper = 'tw-comments-' . $doc->get('id');
+$heartStack = $doc->POD->getPeopleByFavorite($doc);
+$heartCount = $heartStack ? $heartStack->totalCount() : 0;
 ?>
     <article class="tw-tweet__body">
         <header class="tw-tweet__head">
@@ -9,7 +12,9 @@
             <span class="tw-tweet__meta">
                 @<?php echo strtolower(preg_replace('/\s+/', '', $doc->author()->get('nick'))); ?>
                 &bull;
-                <a href="<?php $doc->write('permalink'); ?>" class="tw-tweet__time"><?php $doc->write('timesince'); ?></a>
+                <a href="<?php $doc->write('permalink'); ?>" class="tw-tweet__time" title="<?php echo date('F j, Y g:i a', strtotime($doc->get('date'))); ?>">
+                    <?php echo date('M j, Y g:i a', strtotime($doc->get('date'))); ?>
+                </a>
             </span>
         </header>
 
@@ -43,11 +48,11 @@
 
         <footer class="tw-tweet__actions">
             <span>
-                <a href="<?php $doc->write('permalink'); ?>#comments">💬 <?php echo $doc->comments()->totalCount(); ?></a>
+                <a href="#" class="tw-reply-toggle" data-target="#<?= $commentWrapper; ?>">💬 <?php echo $doc->comments()->totalCount(); ?></a>
             </span>
             <?php if ($doc->POD->isAuthenticated()) { ?>
                 <span>
-                    <a href="#toggleFlag" data-flag="watching" data-active="Tracking" data-inactive="Track" data-content="<?= $doc->id; ?>" class="trackingLink <?php if ($doc->hasFlag('watching', $POD->currentUser())) {?>active<?php } ?>">👀 Track</a>
+                    <a href="#toggleFlag" data-flag="favorite" data-active="❤️ <?= $heartCount; ?>" data-inactive="🤍 <?= $heartCount; ?>" data-content="<?= $doc->id; ?>" class="heartLink <?php if ($doc->hasFlag('favorite', $POD->currentUser())) {?>active<?php } ?>"><?php echo $doc->hasFlag('favorite', $POD->currentUser()) ? '❤️ ' : '🤍 '; echo $heartCount; ?></a>
                 </span>
                 <?php if ($doc->isEditable()) { ?>
                     <span><a href="<?php $doc->write('editlink'); ?>">✏️ Edit</a></span>
@@ -55,3 +60,31 @@
             <?php } ?>
         </footer>
     </article>
+
+    <?php $doc->comments()->reset(); ?>
+    <div class="tw-tweet__comments" id="<?= $commentWrapper; ?>" style="display:none;">
+        <div class="tw-comments-list" id="<?= $commentWrapper; ?>_list">
+            <?php while ($comment = $doc->comments()->getNext()) { $comment->output(); } ?>
+        </div>
+        <?php if ($POD->isAuthenticated()) { ?>
+            <div class="tw-comment-form-wrapper tw-comment-form-wrapper--inline">
+                <div class="tw-comment-form tw-comment-form--inline">
+                    <div class="tw-comment-form__avatar">
+                        <?php if ($img = $POD->currentUser()->files()->contains('file_name','img')) { ?>
+                            <img src="<?php $img->write('thumbnail'); ?>" alt="<?php $POD->currentUser()->write('nick'); ?>" />
+                        <?php } else { ?>
+                            <?php $POD->currentUser()->avatar(48); ?>
+                        <?php } ?>
+                    </div>
+                    <form method="post" action="#addComment" class="tw-comment-form__inner" data-comments="#<?= $commentWrapper; ?>_list" data-content="<?= $doc->id; ?>">
+                        <textarea name="comment" class="expanding" rows="2" placeholder="Tweet your reply"></textarea>
+                        <div class="tw-comment-form__actions">
+                            <button type="submit" class="tw-pill">Reply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <?php } else { ?>
+            <p class="tw-muted"><a href="<?php $POD->siteRoot(); ?>/login">Log in</a> to reply.</p>
+        <?php } ?>
+    </div>

@@ -38,12 +38,12 @@
 
 
 		$('textarea.expanding').live('focus',function() {
-			$(this).css('height','100px');		
+			$(this).css('height','140px');		
 		});
 
 		$('textarea.expanding').live('blur',function() {
 			if ($(this).val()=='') { 
-				$(this).css('height','25px');
+				$(this).css('height','120px');
 			}
 		});
 		
@@ -80,6 +80,21 @@
 			)(this,comments_div);	
 			return false;
 				
+		}); 
+
+		$('.tw-reply-toggle').live('click',function(e) {
+			e.preventDefault();
+			var target = $(this).attr('data-target');
+			if (target) {
+				var $el = $(target);
+				if ($el.length) {
+					$el.slideToggle(150, function() {
+						if ($el.is(':visible')) {
+							$el.find('textarea').first().focus();
+						}
+					});
+				}
+			}
 		});
 
 
@@ -197,6 +212,22 @@
 			var flag = $(this).attr('data-flag');
 			var on_state = $(this).attr('data-active');
 			var off_state =$(this).attr('data-inactive');
+			if ($(this).hasClass('heartLink')) {
+				var currentText = $(this).text();
+				var count = parseInt(currentText.replace(/[^0-9]/g,''),10);
+				if (isNaN(count)) { count = 0; }
+				if ($(this).hasClass('active')) {
+					var newCount = Math.max(count-1,0);
+					on_state = '❤️ ' + (newCount+1);
+					off_state = '🤍 ' + newCount;
+				} else {
+					var newCount = count+1;
+					on_state = '❤️ ' + newCount;
+					off_state = '🤍 ' + count;
+				}
+				$(this).attr('data-active',on_state);
+				$(this).attr('data-inactive',off_state);
+			}
 			if ($(this).hasClass('active')) { 
 				$(this).removeClass('active');
 				$(this).html(off_state);

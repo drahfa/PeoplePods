@@ -29,14 +29,13 @@
 		<?php  } ?>
 		
 		<header class="tw-composer__header">
-			<h2>Compose new post</h2>
-			<ul class="tw-composer__actions" role="tablist">
-				<li><button type="button" onclick="togglePostOption('body');" id="add_body">📝 Body</button></li>
-				<li><button type="button" onclick="togglePostOption('photo');" id="add_photo">🖼 Image</button></li>
-				<li><button type="button" onclick="togglePostOption('video');" id="add_video">🎬 Video</button></li>
-				<li><button type="button" onclick="togglePostOption('link');" id="add_link">🔗 Link</button></li>
-				<li><button type="button" onclick="togglePostOption('tags');" id="add_tags">🏷 Tags</button></li>
-			</ul>
+			<div class="tw-composer__actions" role="tablist">
+				<button type="button" onclick="togglePostOption('body');" id="add_body">📝 Body</button>
+				<button type="button" onclick="togglePostOption('photo');" id="add_photo">🖼 Image</button>
+				<button type="button" onclick="togglePostOption('video');" id="add_video">🎬 Video</button>
+				<button type="button" onclick="togglePostOption('link');" id="add_link">🔗 Link</button>
+				<button type="button" onclick="togglePostOption('tags');" id="add_tags">🏷 Tags</button>
+			</div>
 		</header>
 
 		<div class="tw-composer__primary">
