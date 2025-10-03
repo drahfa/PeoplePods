@@ -38,7 +38,7 @@ This project is a **community revival (v0.92)** — updated for **PHP 8+**, refr
 
 1. Clone or download the repository:
    ```bash
-   git clone https://github.com/yourusername/peoplepods.git
+   git clone https://github.com/drahfa/PeoplePods.git
    cd peoplepods
    ```
 
