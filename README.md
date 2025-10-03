@@ -86,7 +86,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
 ## 🙌 Acknowledgements
 
 - **Original Author**: [XOXCO, Inc.](http://xoxco.com)  
-- **Community Revival**: v0.92 maintained by *[Your Name]*  
+- **Community Revival**: v0.92 maintained by *drahfa*  
 - Thanks to all past contributors on PeoplePods.net.  
 
 ---
