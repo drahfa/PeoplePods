@@ -1,4 +1,4 @@
-PeoplePods, version 0.9
+PeoplePods, version 0.91
 
 PeoplePods is an SDK for creating modern web applications where many people
 come together to meet, talk, share, read, work, publish and explore.  Every
@@ -22,7 +22,7 @@ http://xoxco.com
 *************************************************
 ** REQUIREMENTS
 
-PHP 5+
+PHP 8+
 MySQL 4+
 Level 9
 10,000 HP
@@ -51,6 +51,7 @@ peoplepods/
 	pods/			- Core Pods
 	themes/			- Default themes
 		default/	- Default front end theme
+		twitter/	- Twitter-inspired front end theme
 		admin/		- Default Command Center theme
 
 
@@ -92,6 +93,25 @@ Voila!
 ** RELEASE NOTES
 
 Download the latest version of PeoplePods at http://peoplepods.net/version
+
+v0.91
+October 3, 2025
+
+NEW FEATURES
+
+* Updated codebase to be fully compatible with PHP 8
+
+* Added Twitter-inspired theme with modern UI components and responsive design
+
+* Fixed all deprecated PHP functions and syntax to comply with PHP 8 standards
+
+BUG FIXES
+
+* Resolved layout duplication issues in Twitter theme's edit profile template
+
+* Created missing files/cache directory structure for proper caching functionality
+
+*************************************************
 
 v0.9
 April 15, 2011
