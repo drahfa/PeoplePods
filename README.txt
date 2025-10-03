@@ -1,4 +1,4 @@
-PeoplePods, version 0.91
+PeoplePods, version 0.92
 
 PeoplePods is an SDK for creating modern web applications where many people
 come together to meet, talk, share, read, work, publish and explore.  Every
