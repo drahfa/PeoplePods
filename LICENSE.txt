@@ -1,5 +1,5 @@
 PeoplePods (Community Revival)
-https://github.com/yourusername/peoplepods
+https://github.com/drahfa/peoplepods
 
 Originally created by XOXCO, Inc.
 http://xoxco.com
