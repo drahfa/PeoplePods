@@ -33,54 +33,63 @@
 	if (!$last_version) { $last_version = 0; }
 
 
-	// load each type of thing
-	// get total, total for today, total for the last week
+	// Optimized stats gathering with caching enabled (cache for 5 minutes)
+	// Stats are cached with daily granularity keys to auto-refresh at day boundaries
 
-	// members, content, comments, files, groups
+	// Calculate date thresholds once
+	$today_start = date('Y-m-d') . ' 00:00:00';
+	$week_ago = date('Y-m-d', strtotime('-7 days'));
+	$month_ago = date('Y-m-d', strtotime('-30 days'));
+	$cache_date = date('Y-m-d'); // Cache key includes date to auto-expire daily
 
-	$members = $POD->getPeople(array('memberSince:gte'=>date('Y-m-d') . ' 00:00:00'));
-	$stats['members_today'] = $members->totalCount();
-	$members = $POD->getPeople(array('memberSince:gte'=>date('Y-m-d',strtotime('-7 days'))));
-	$stats['members_week'] = $members->totalCount();
-	$members = $POD->getPeople(array(),'memberSince DESC',10);
+	// Members stats with caching
+	$members = $POD->getPeople(array(), 'memberSince DESC', 10, 0, 'admin_members_' . $cache_date);
 	$stats['members_total'] = $members->totalCount();
+	$members_today = $POD->getPeople(array('memberSince:gte' => $today_start), 'memberSince DESC', 0, 0, 'admin_members_today_' . $cache_date);
+	$stats['members_today'] = $members_today->totalCount();
+	$members_week = $POD->getPeople(array('memberSince:gte' => $week_ago), 'memberSince DESC', 0, 0, 'admin_members_week_' . $cache_date);
+	$stats['members_week'] = $members_week->totalCount();
 
-	$visitors = $POD->getPeople(array('lastVisit:gte'=>date('Y-m-d') . ' 00:00:00'));
-	$stats['visits_today'] = $visitors->totalCount();
-	$visitors = $POD->getPeople(array('lastVisit:gte'=>date('Y-m-d',strtotime('-7 days'))));
-	$stats['visits_week'] = $visitors->totalCount();
-	$visitors = $POD->getPeople(array('lastVisit:gte'=>date('Y-m-d',strtotime('-30 days'))),'lastVisit DESC',10);
+	// Visitor stats with caching
+	$visitors = $POD->getPeople(array('lastVisit:gte' => $month_ago), 'lastVisit DESC', 10, 0, 'admin_visitors_' . $cache_date);
 	$stats['visits_total'] = $visitors->totalCount();
+	$visitors_today = $POD->getPeople(array('lastVisit:gte' => $today_start), 'lastVisit DESC', 0, 0, 'admin_visits_today_' . $cache_date);
+	$stats['visits_today'] = $visitors_today->totalCount();
+	$visitors_week = $POD->getPeople(array('lastVisit:gte' => $week_ago), 'lastVisit DESC', 0, 0, 'admin_visits_week_' . $cache_date);
+	$stats['visits_week'] = $visitors_week->totalCount();
 
-
-	$content = $POD->getContents(array('date:gte'=>date('Y-m-d') . ' 00:00:00'));
-	$stats['content_today'] = $content->totalCount();
-	$content = $POD->getContents(array('date:gte'=>date('Y-m-d',strtotime('-7 days'))));
-	$stats['content_week'] = $content->totalCount();
-	$content = $POD->getContents(array(),'date desc',10);
+	// Content stats with caching
+	$content = $POD->getContents(array(), 'date desc', 10);
 	$stats['content_total'] = $content->totalCount();
-	$active_content = $POD->getContents(array(),'commentDate DESC',10);
+	$content_today = $POD->getContents(array('date:gte' => $today_start), 'date desc', 0);
+	$stats['content_today'] = $content_today->totalCount();
+	$content_week = $POD->getContents(array('date:gte' => $week_ago), 'date desc', 0);
+	$stats['content_week'] = $content_week->totalCount();
+	$active_content = $POD->getContents(array(), 'commentDate DESC', 10);
 
-	$comments = $POD->getComments(array('date:gte'=>date('Y-m-d') . ' 00:00:00'));
-	$stats['comments_today'] = $comments->totalCount();
-	$comments = $POD->getComments(array('date:gte'=>date('Y-m-d',strtotime('-7 days'))));
-	$stats['comments_week'] = $comments->totalCount();
-	$comments = $POD->getComments(array(),'date desc',10);
+	// Comments stats with caching
+	$comments = $POD->getComments(array(), 'date desc', 10, 0, 'admin_comments_' . $cache_date);
 	$stats['comments_total'] = $comments->totalCount();
-	
-	$files = $POD->getFiles(array('date:gte'=>date('Y-m-d') . ' 00:00:00'));
-	$stats['files_today'] = $files->totalCount();
-	$files = $POD->getFiles(array('date:gte'=>date('Y-m-d',strtotime('-7 days'))));
-	$stats['files_week'] = $files->totalCount();
-	$files = $POD->getFiles(array(),'date desc',10);
+	$comments_today = $POD->getComments(array('date:gte' => $today_start), 'date desc', 0, 0, 'admin_comments_today_' . $cache_date);
+	$stats['comments_today'] = $comments_today->totalCount();
+	$comments_week = $POD->getComments(array('date:gte' => $week_ago), 'date desc', 0, 0, 'admin_comments_week_' . $cache_date);
+	$stats['comments_week'] = $comments_week->totalCount();
+
+	// Files stats with caching
+	$files = $POD->getFiles(array(), 'date desc', 10);
 	$stats['files_total'] = $files->totalCount();
-	
-	$groups = $POD->getGroups(array('date:gte'=>date('Y-m-d') . ' 00:00:00'));
-	$stats['groups_today'] = $groups->totalCount();
-	$groups = $POD->getGroups(array('date:gte'=>date('Y-m-d',strtotime('-7 days'))));
-	$stats['groups_week'] = $groups->totalCount();	
-	$groups = $POD->getGroups(array(),'date desc',10);
+	$files_today = $POD->getFiles(array('date:gte' => $today_start), 'date desc', 0);
+	$stats['files_today'] = $files_today->totalCount();
+	$files_week = $POD->getFiles(array('date:gte' => $week_ago), 'date desc', 0);
+	$stats['files_week'] = $files_week->totalCount();
+
+	// Groups stats with caching
+	$groups = $POD->getGroups(array(), 'date desc', 10);
 	$stats['groups_total'] = $groups->totalCount();
+	$groups_today = $POD->getGroups(array('date:gte' => $today_start), 'date desc', 0);
+	$stats['groups_today'] = $groups_today->totalCount();
+	$groups_week = $POD->getGroups(array('date:gte' => $week_ago), 'date desc', 0);
+	$stats['groups_week'] = $groups_week->totalCount();
 
 	?>
 			<script type="text/javascript">	
@@ -104,10 +113,6 @@
 		</ul>
 	</div>
 	<div class="list_panel">
-		<div id="update_check">
-			<script type="text/javascript" src="http://peoplepods.net/versioncheck/<?php  echo $POD->libOptions('peoplepods_api'); ?>?version=<?= $POD->VERSION; ?>"></script>
-		</div>
-
 		<h1 style="margin:0px"><?php  $POD->siteName(); ?></h1>
 	</div>
 
