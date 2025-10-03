@@ -1,10 +1,11 @@
-PeoplePods
-http://peoplepods.net
+PeoplePods (Community Revival)
+https://github.com/yourusername/peoplepods
 
-XOXCO
+Originally created by XOXCO, Inc.
 http://xoxco.com
 
-Copyright (c) 2009 XOXCO, Inc
+Copyright (c) 2009 XOXCO, Inc.
+Copyright (c) 2025 AHMAD FAISAL MOHAMAD AYOB / @drahfa
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
