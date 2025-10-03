@@ -381,6 +381,75 @@ a:hover {
     background: #fff;
 }
 
+.tw-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.tw-form--narrow {
+    gap: 0.8rem;
+}
+
+.tw-form__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.tw-form__grid label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--tw-muted);
+}
+
+.tw-input {
+    width: 100%;
+    border: 1px solid var(--tw-border);
+    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+    background: #f7f9f9;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
+.tw-input:focus {
+    outline: none;
+    border-color: var(--tw-blue);
+    background: #fff;
+}
+
+.tw-file-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.tw-file-input__preview {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.tw-file-input__preview img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--tw-border);
+}
+
+.tw-form__actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tw-alert {
+    background: rgba(29, 155, 240, 0.12);
+    color: var(--tw-blue);
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+}
 .tw-article .post_image,
 .tw-article .tw-article__media {
     margin: 1rem 0;
@@ -983,4 +1052,12 @@ button[type="submit"]:hover,
 
 .heartLink.active {
     color: #f91880;
+}
+.tw-form.tw-form--narrow label {
+    font-weight: 600;
+    color: var(--tw-muted);
+}
+
+.tw-form.tw-form--narrow .tw-input {
+    max-width: 320px;
 }

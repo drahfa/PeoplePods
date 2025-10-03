@@ -1,80 +1,76 @@
 <?php
 /***********************************************
-* This file is part of PeoplePods
-* (c) xoxco, inc  
-* http://peoplepods.net http://xoxco.com
-*
-* theme/people/editprofile.php
-* used by core_authentication
-* defines the edit profile page at /editprofile
-*
-* Documentation for this pod can be found here:
-* http://peoplepods.net/readme/person-object
-/**********************************************/
+* Twitter-inspired edit profile page
+**********************************************/
 ?>
 
-	<div class="contentPadding">
-		
-		<h1>My Account</h1>
-		
-		<?php  if ($user->get('verificationKey') != '') { ?>
-			<div class="info">
-				Your e-mail address is still unverified.  <a href="<?php  $POD->siteRoot(); ?>/verify">Click here</a> to verify yourself!
-			</div>
-		<?php  } // if unverified ?>
-		
-		<form id="edit_profile" method="post" action="<?php  $POD->siteRoot(); ?>/editprofile"  class="valid" enctype="multipart/form-data">
-		
-			<p class="input"><label for="nick">My Username:</label>
-			<input class="required text"  maxlength="20" name="nick" id="nick" value="<?php  $user->htmlspecialwrite('nick'); ?>"></p>	
+<section class="tw-card tw-profile-header">
+    <div class="tw-profile-header__top">
+        <div class="tw-profile-header__avatar">
+            <?php if ($img = $user->files()->contains('file_name','img')) { ?>
+                <img src="<?php $img->write('resized'); ?>" alt="<?php $user->write('nick'); ?>" />
+            <?php } else { ?>
+                <?php $user->avatar(120); ?>
+            <?php } ?>
+        </div>
+        <div class="tw-profile-header__meta">
+            <h1>Edit profile</h1>
+            <p class="tw-muted">@<?php echo strtolower(preg_replace('/\s+/','',$user->get('nick'))); ?></p>
+            <?php if ($user->get('verificationKey') != '') { ?>
+                <div class="tw-alert">Your email is unverified. <a href="<?php $POD->siteRoot(); ?>/verify">Verify now</a>.</div>
+            <?php } ?>
+        </div>
+    </div>
 
-			<p class="input"><label for="email">My Email:</label>
-			<input class="required email text" name="email" id="email" value="<?php  $user->htmlspecialwrite('email'); ?>"></p>
-	
-			<p class="input"><label for="photo">My Picture:</label>
-			<input name="img" type="file" id="img">
-				<?php  if ($img = $user->files()->contains('file_name','img')) { ?>
-					<div id="file<?= $img->id; ?>" class="file">
-						<a href="<?= $img->original_file; ?>"><img src="<?php  $img->write('thumbnail'); ?>" /></a>
-						<a href="#deleteFile" data-file="<?= $img->id;?>">Delete</a>
-					</div>
-				<?php  } ?>
-			</p>
-	
-			<!-- These are meta fields.  They don't exist in the real user table, but the values will show up as if they did! -->
-			<p class="input"><label for="aboutme">About Me:</label>
-			<textarea name="aboutme" class="text" id="aboutme" wrap="virtual"><?php  $user->htmlspecialwrite('aboutme'); ?></textarea></p>
-				
-			<p class="input"><label for="tagline">My Page Title:</label>
-			<input class="text" name="tagline" id="tagline" value="<?php  $user->htmlspecialwrite('tagline'); ?>" /></p>
+    <form id="edit_profile" method="post" action="<?php $POD->siteRoot(); ?>/editprofile" class="tw-form" enctype="multipart/form-data">
+        <div class="tw-form__grid">
+            <label for="nick">Username</label>
+            <input class="required tw-input" maxlength="20" name="nick" id="nick" value="<?php $user->htmlspecialwrite('nick'); ?>" />
 
-			<p class="input"><label for="age">Age:</label>
-			<input class="text" name="age" id="age" length="5" maxlength="5" value="<?php  $user->htmlspecialwrite('age'); ?>" /></p>
+            <label for="email">Email</label>
+            <input class="required email tw-input" name="email" id="email" value="<?php $user->htmlspecialwrite('email'); ?>" />
 
-			<p class="input"><label for="sex">Sex:</label>
-			<input class="text" name="sex" id="sex" maxlength="20" value="<?php  $user->htmlspecialwrite('sex'); ?>" /></p>
+            <label for="img">Profile photo</label>
+            <div class="tw-file-input">
+                <input name="img" type="file" id="img" accept="image/*" />
+                <?php if ($img) { ?>
+                    <div class="tw-file-input__preview">
+                        <img src="<?php $img->write('thumbnail'); ?>" alt="<?php $user->write('nick'); ?>" />
+                        <a href="#deleteFile" data-file="<?= $img->id;?>" class="tw-pill tw-pill--outline">Remove</a>
+                    </div>
+                <?php } ?>
+            </div>
 
-			<p class="input"><label for="location">Location:</label>
-			<input class="text" name="location" maxlength="100" id="location" value="<?php  $user->htmlspecialwrite('location'); ?>" /></p>
-		
-			<p class="input"><label for="homepage">My Homepage:</label>
-			<input class="url text" name="homepage" id="homepage" value="<?php  $user->htmlspecialwrite('homepage'); ?>" /></p>
+            <label for="aboutme">Bio</label>
+            <textarea name="aboutme" class="tw-input" id="aboutme" rows="4" placeholder="Tell the community about yourself"><?php $user->htmlspecialwrite('aboutme'); ?></textarea>
 
-			<!-- end meta fields -->		
-		
-			<p class="input"><label>&nbsp;</label><input type="submit" class="button" value="Update my account" /></p>
-		</form>
-		
+            <label for="tagline">Profile headline</label>
+            <input class="tw-input" name="tagline" id="tagline" value="<?php $user->htmlspecialwrite('tagline'); ?>" />
 
-		<hr noshade />
+            <label for="age">Age</label>
+            <input class="tw-input" name="age" id="age" maxlength="5" value="<?php $user->htmlspecialwrite('age'); ?>" />
 
-		<form id="change_password" method="post" action="<?php  $POD->siteRoot(); ?>/editprofile" class="valid">
+            <label for="sex">Gender</label>
+            <input class="tw-input" name="sex" id="sex" maxlength="20" value="<?php $user->htmlspecialwrite('sex'); ?>" />
 
-			<h3>Change My Password</h3>
-		
-			<p class="input"><label for="password">New Pass:</label><input name="password" id="password" type="password" class="text required" /></p>
-		
-			<p class="input"><label>&nbsp;</label><input class="button" type="submit" value="Set New Password" /></p>	
-	
-		</form>
-	</div>
+            <label for="location">Location</label>
+            <input class="tw-input" name="location" maxlength="100" id="location" value="<?php $user->htmlspecialwrite('location'); ?>" />
+
+            <label for="homepage">Website</label>
+            <input class="tw-input" name="homepage" id="homepage" value="<?php $user->htmlspecialwrite('homepage'); ?>" placeholder="https://" />
+        </div>
+
+        <div class="tw-form__actions">
+            <button type="submit" class="tw-pill">Save changes</button>
+        </div>
+    </form>
+</section>
+
+<section class="tw-card tw-profile-header">
+    <h2>Change password</h2>
+    <form id="change_password" method="post" action="<?php $POD->siteRoot(); ?>/editprofile" class="tw-form tw-form--narrow">
+        <label for="password">New password</label>
+        <input name="password" id="password" type="password" class="tw-input required" />
+        <button class="tw-pill" type="submit">Set new password</button>
+    </form>
+</section>
