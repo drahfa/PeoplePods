@@ -23,7 +23,7 @@ Dates use `YYYY-MM-DD`.
 ### Notes
 - This version marks the **community revival** of PeoplePods after over a decade of inactivity.
 - Original project was created by **XOXCO, Inc.** (last release: v0.91 in 2011).
-- This revival release is maintained by *[Your Name]*.
+- This revival release is maintained by *drahfa*.
 
 ---
 
